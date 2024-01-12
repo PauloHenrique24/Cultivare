@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac79678500cbb143b7efd10abf3cc8e, type: 3}
+  m_Name: wood
+  m_EditorClassIdentifier: 
+  name_: Wood
+  description_: jafhsduiohfgiasjgjkdahsfkljadsjkgbhadsklfjaklsdjghasd
+  icone: {fileID: 25925919, guid: 44f5c8c5ed83b5643ba77e3c878e62a4, type: 3}
+  prefab: {fileID: 6527300687415383648, guid: 6ffd035ec8eea494495a975adc58c601, type: 3}
+  notBunch: 0
+  qtd: 10
+  islife: 0
+  life: 100
+  porcentDamageLife: 0
+  damage: 0
+  tool: 5
+  seedGrowth: []
+  plantSeed: {fileID: 0}
+  water: 0
+  id: 0

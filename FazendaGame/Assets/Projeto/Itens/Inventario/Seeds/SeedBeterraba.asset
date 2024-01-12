@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac79678500cbb143b7efd10abf3cc8e, type: 3}
+  m_Name: SeedBeterraba
+  m_EditorClassIdentifier: 
+  name_: Semente de Beterraba
+  description_: "adsl\xE7fkadsbjkfhjdsajfghasdfjkl"
+  icone: {fileID: 21300000, guid: dfa7a31d54892564ebbfdb901e70cf3f, type: 3}
+  prefab: {fileID: 8755117595816804370, guid: 0053095052d7a494fb27b2a3cb7238bf, type: 3}
+  notBunch: 0
+  qtd: 5
+  islife: 0
+  life: 0
+  porcentDamageLife: 0
+  damage: 0
+  tool: 6
+  seedGrowth:
+  - {fileID: 21300000, guid: 4187e126f84ba524ab52296cfa206966, type: 3}
+  - {fileID: 21300000, guid: 0edd2ff368057d84db428d843e71db5e, type: 3}
+  - {fileID: 21300000, guid: dcb72ef9db03a4143ac98b04bd328e07, type: 3}
+  - {fileID: 21300000, guid: 7709b83c7ad443d4d9cf1da700566f7b, type: 3}
+  plantSeed: {fileID: 6964755237930190610, guid: 4725e067f52d6394a9836a5833d1096f, type: 3}
+  water: 0
+  id: 0
