@@ -179,7 +179,16 @@ public class BuildSystem : MonoBehaviour
 
                     if (itemSelecionado.isRot)
                     {
+                        Vector2 spriteSize = GetSpriteAtCell(itemSelecionado.tiles[indice]).bounds.size;
+
+                        itsele.GetComponent<BoxCollider2D>().size = spriteSize;
+                        
                         itsele.GetComponent<SpriteRenderer>().sprite = GetSpriteAtCell(itemSelecionado.tiles[indice]);
+                    }
+
+                    if (itemSelecionado.isAnim)
+                    {
+                        itsele.GetComponent<Animator>().runtimeAnimatorController = itemSelecionado.animators[indice];
                     }
                 }
             }

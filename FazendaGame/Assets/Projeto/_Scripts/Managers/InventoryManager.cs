@@ -525,5 +525,6 @@ public enum Tool
     seeds,
     irrigation,
     edible,
+    seller,
     none
 }

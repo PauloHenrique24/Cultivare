@@ -20,4 +20,9 @@ public class ItemBuild : ScriptableObject
     public GameObject buildTile;
 
     public List<TileBase> tiles;
+
+    [Header("Animation")]
+    public bool isAnim;
+
+    public List<RuntimeAnimatorController> animators;
 }

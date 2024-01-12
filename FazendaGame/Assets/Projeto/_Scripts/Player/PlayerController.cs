@@ -161,11 +161,19 @@ public class PlayerController : MonoBehaviour
                         AtkFunc("axe");
                         break;
 
+                    case Tool.seller:
+                        break;
+
                     default:
                         break;
                 }
             }
         }
+    }
+
+    public void DestruirBuild()
+    {
+
     }
 
     void AtkFunc(string animate)
