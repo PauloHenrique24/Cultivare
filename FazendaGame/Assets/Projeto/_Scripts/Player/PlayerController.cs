@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static UnityEditor.Progress;
@@ -40,6 +41,8 @@ public class PlayerController : MonoBehaviour
     [Header("Money")]
     public static int Money;
 
+    private bool notHandSeller;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -57,6 +60,26 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = Vector2.MoveTowards(transform.position, posPlantPlayer, 5 * Time.deltaTime);
         }
+
+        if(InventoryManager.current.handObj.transform.childCount > 0 && InventoryManager.current.handObj.transform.GetChild(0).GetComponent<ItemSlot>().item.tool == Tool.seller && BuildSystem.itemSelecionado == null)
+        {
+            BuildSystem.instance.HighlightDestroyBuild();
+            notHandSeller = false;
+        }
+        else
+        {
+            if (!notHandSeller)
+            {
+                BuildSystem.highlighted = false;
+                BuildSystem.instance.useBtn.onClick.RemoveAllListeners();
+                BuildSystem.instance.useBtn.gameObject.SetActive(false);
+
+                BuildSystem.instance.tempTilemap.SetTile(BuildSystem.instance.highlightedTilePos, null);
+                notHandSeller = true;
+            }
+        }
+
+        
     }
 
     void OnMoviment()
@@ -145,7 +168,7 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
-        if(handObj.transform.childCount > 0)
+        if (handObj.transform.childCount > 0)
         {
             if (!isAtk)
             {
@@ -161,21 +184,13 @@ public class PlayerController : MonoBehaviour
                         AtkFunc("axe");
                         break;
 
-                    case Tool.seller:
-                        break;
-
                     default:
                         break;
                 }
             }
         }
     }
-
-    public void DestruirBuild()
-    {
-
-    }
-
+   
     void AtkFunc(string animate)
     {
         anim.SetTrigger(animate);

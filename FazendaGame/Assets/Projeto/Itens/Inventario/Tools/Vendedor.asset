@@ -18,8 +18,8 @@ MonoBehaviour:
   prefab: {fileID: 7134319689545025632, guid: 108af5a4e25b1f742a90734d6fb8a711, type: 3}
   notBunch: 1
   qtd: 0
-  islife: 1
-  life: 8
+  islife: 0
+  life: 0
   porcentDamageLife: 1
   damage: 10
   tool: 9

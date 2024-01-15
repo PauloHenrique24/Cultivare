@@ -887,7 +887,7 @@ TextureImporter:
         width: 12
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1536,7 +1536,7 @@ TextureImporter:
         x: 67
         y: 600
         width: 25
-        height: 28
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1706,7 +1706,7 @@ TextureImporter:
         width: 12
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1714,6 +1714,27 @@ TextureImporter:
       bones: []
       spriteID: a2595a96328cca04682a58c4a42e9a99
       internalID: 648260677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arvoretop
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 616
+        width: 25
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 513958f2a0f5efa4fafedf1d0508b91b
+      internalID: -1600618656
       vertices: []
       indices: 
       edges: []
@@ -1803,6 +1824,7 @@ TextureImporter:
       SunnysideWorld_Tileset_V0.1_74: -1877582146
       SunnysideWorld_Tileset_V0.1_8: -349697911
       SunnysideWorld_Tileset_V0.1_9: -1701882202
+      arvoretop: -1600618656
       troncoCortado: -1352895838
       wood: 25925919
   mipmapLimitGroupName: 

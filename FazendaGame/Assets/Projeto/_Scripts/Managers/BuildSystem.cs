@@ -7,11 +7,13 @@ using UnityEngine.UI;
 
 public class BuildSystem : MonoBehaviour
 {
+    public static BuildSystem instance;
+
     public static TileBase highlightTile;
     [SerializeField] private Tilemap mainTilemap;
-    [SerializeField] private Tilemap tempTilemap;
+    public Tilemap tempTilemap;
 
-    private Vector3Int highlightedTilePos;
+    [HideInInspector] public Vector3Int highlightedTilePos;
     public static bool highlighted;
 
     [Header("Position")]
@@ -26,6 +28,17 @@ public class BuildSystem : MonoBehaviour
     [SerializeField] private Tilemap buildTilemap;
 
     public static int indice;
+
+    [Header("DestroyBuildItem")]
+    public TileBase tileselectDestroyItem;
+    public LayerMask layerBuild;
+
+    void Awake()
+    {
+        if(instance == null){
+            instance = this;
+        }    
+    }
 
     void Start()
     {
@@ -58,7 +71,7 @@ public class BuildSystem : MonoBehaviour
         }
     }
 
-    private Vector3Int GetMouseOnGridPos()
+    public Vector3Int GetMouseOnGridPos()
     {
         Vector3 mousePos = pos.position;
 
@@ -110,6 +123,58 @@ public class BuildSystem : MonoBehaviour
 
                 highlighted = false;
             }
+        }
+    }
+
+    public void HighlightDestroyBuild()
+    {
+        if (!highlighted)
+        {
+            Vector3Int mouseGridPos = GetMouseOnGridPos();
+            if (highlightedTilePos != mouseGridPos)
+            {
+                tempTilemap.SetTile(highlightedTilePos, null);
+                TileBase tile = mainTilemap.GetTile(mouseGridPos);
+
+                if (tile)
+                {
+                    RaycastHit2D hit = Physics2D.Raycast(tempTilemap.GetCellCenterLocal(mouseGridPos), Vector3.forward, 1f, layerBuild);
+
+                    tempTilemap.SetTile(mouseGridPos, tileselectDestroyItem);
+                    highlightedTilePos = mouseGridPos;
+
+                    if (hit.collider != null)
+                    {
+                        useBtn.gameObject.SetActive(true);
+                        useBtn.onClick.AddListener(() => DestroyBuilItem(hit.collider.gameObject));
+                    }
+                    else
+                    {
+                        useBtn.onClick.RemoveListener(() => DestroyBuilItem(hit.collider.gameObject));
+                        useBtn.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    useBtn.gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+    public void DestroyBuilItem(GameObject obj)
+    {
+        if (obj.GetComponent<Tilemap>())
+        {
+            //Ele é tile
+            buildTilemap.SetTile(highlightedTilePos, null);
+            PlayerController.Money++;
+        }
+        else
+        {
+            //Ele é prefab
+            Destroy(obj);
+            PlayerController.Money++;
         }
     }
 
@@ -177,6 +242,8 @@ public class BuildSystem : MonoBehaviour
                     //Contruir apartir de prefabs
                     var itsele = Instantiate(itemSelecionado.buildTile, buildTilemap.GetCellCenterLocal(highlightedTilePos), Quaternion.identity);
 
+                    itsele.gameObject.layer = 6;
+
                     if (itemSelecionado.isRot)
                     {
                         Vector2 spriteSize = GetSpriteAtCell(itemSelecionado.tiles[indice]).bounds.size;
@@ -205,6 +272,8 @@ public class BuildSystem : MonoBehaviour
             StartCoroutine(Contruct());
         }
     }
+
+   
 
     IEnumerator Contruct()
     {
