@@ -9,12 +9,8 @@ using static UnityEditor.Progress;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movimentação")]
-    public float speedNormal;
-    private float speedSlow;
+    public float speed;
 
-    private float speed;
-
-    private Vector2 moveDirection;
     private Rigidbody2D rb;
 
     [HideInInspector] public bool isFacing;
@@ -47,15 +43,12 @@ public class PlayerController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        speedSlow = speedNormal / 1.2f;
 
         isMov = false;
     }
 
     void Update()
     {
-        OnMoviment();
-
         if (isPlant)
         {
             transform.position = Vector2.MoveTowards(transform.position, posPlantPlayer, 5 * Time.deltaTime);
@@ -78,65 +71,56 @@ public class PlayerController : MonoBehaviour
                 notHandSeller = true;
             }
         }
+    }
 
-        
+    void FixedUpdate()
+    {
+        OnMoviment();
     }
 
     void OnMoviment()
     {
         if (!isMov)
         {
-            float x = Input.GetAxis("Horizontal");
-            float y = Input.GetAxis("Vertical");
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
 
-            moveDirection = new Vector2(x, y);
+            Vector2 direcao = new Vector2(horizontal,vertical);
+            
+            direcao = direcao.normalized;
 
-            if (x != 0 && y != 0)
-            {
-                speed = speedSlow;
-            }
-            else
-            {
-                speed = speedNormal;
-            }
+            rb.velocity = direcao * speed;
 
-            if (y > 0 && x == 0)
+            #region GridBuild
+
+            if (vertical > 0 && horizontal == 0)
             {
                 transform.Find("positionGrid").transform.localPosition = new Vector2(0, 0.64f);
             }
-            else if(x != 0)
+            else if(horizontal != 0)
             {
                 transform.Find("positionGrid").transform.localPosition = new Vector2(0.54f, 0);
             }
 
-            if (y < 0 && x == 0)
+            if (vertical < 0 && horizontal == 0)
             {
                 transform.Find("positionGrid").transform.localPosition = new Vector2(0, -0.40f);
             }
-            else if(x != 0)
+            else if(horizontal != 0)
             {
                 transform.Find("positionGrid").transform.localPosition = new Vector2(0.54f, 0);
             }
 
-            //else
-            //{
-            //    transform.Find("positionGrid").transform.localPosition = new Vector2(0.54f, 0);
-            //}
+            #endregion
 
-            rb.velocity = moveDirection * speed;
-
-            Flip(x);
+            Flip(horizontal);
             AnimationMov();
-        }
-        else
-        {
-            rb.velocity = new Vector2(0f,0f);
         }
     }
 
     void AnimationMov()
     {
-        if(Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
         {
             anim.SetInteger("transition", 1);
         }
@@ -209,7 +193,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(.7f);
         isAtk = false;
     }
-
 
     private void OnTriggerStay2D(Collider2D collision)
     {

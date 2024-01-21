@@ -228,6 +228,16 @@ MonoBehaviour:
   cochoComidaObj: {fileID: 905673051290989331}
   cochoAgua: 0
   cochoComida: 0
+  aguaCochoImg:
+  - {fileID: -2835961027348238115, guid: 881235631fc766e49b571a379d6aa266, type: 3}
+  - {fileID: -6388910289963284665, guid: 881235631fc766e49b571a379d6aa266, type: 3}
+  - {fileID: 2624178396576563048, guid: 881235631fc766e49b571a379d6aa266, type: 3}
+  - {fileID: -9111448494558930922, guid: 881235631fc766e49b571a379d6aa266, type: 3}
+  comidaCochoImg:
+  - {fileID: 6235592412260440675, guid: 278cadb1cb9a7184483cf3ab5199399d, type: 3}
+  - {fileID: 5033410744053328313, guid: 278cadb1cb9a7184483cf3ab5199399d, type: 3}
+  - {fileID: 5045939826283086665, guid: 278cadb1cb9a7184483cf3ab5199399d, type: 3}
+  - {fileID: -5913584767066816490, guid: 278cadb1cb9a7184483cf3ab5199399d, type: 3}
 --- !u!60 &846809438287390588
 PolygonCollider2D:
   m_ObjectHideFlags: 0

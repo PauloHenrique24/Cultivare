@@ -93,8 +93,11 @@ public class AnimalsController : MonoBehaviour
 
     public void BarEssencials()
     {
-        hunger -= Time.deltaTime / 2;
-        thirst -= Time.deltaTime;
+        if (!inMoviment)
+        {
+            hunger -= Time.deltaTime / 2;
+            thirst -= Time.deltaTime;
+        }
 
         if(hunger != hungerAtual)
         {
@@ -123,9 +126,47 @@ public class AnimalsController : MonoBehaviour
         }
     }
 
+    IEnumerator Full(char letra)
+    {
+        yield return new WaitForSeconds(1f);
+        if(letra == 't')
+        {
+            gameObject.GetComponentInParent<WalledGenerator>().cochoAgua -= (100 - thirst) / 2;
+            gameObject.GetComponentInParent<WalledGenerator>().ReloadImageCocho('a');
+            thirst = 100;
+        }
+        else if(letra == 'h')
+        {
+            gameObject.GetComponentInParent<WalledGenerator>().cochoComida -= (100 - hunger) / 2;
+            gameObject.GetComponentInParent<WalledGenerator>().ReloadImageCocho('c');
+            hunger = 100;
+        }
+
+        inMoviment = false;
+        full = false;
+    }
+
+    bool full = false;
+
     public void Alimentar()
     {
         transform.position = Vector2.MoveTowards(transform.position, new Vector3(objCocho.transform.position.x,objCocho.transform.position.y + .3f), speed * Time.deltaTime);
+
+        if (Vector2.Distance(transform.position, objCocho.transform.position) < 0.4f)
+        {
+            if (objCocho == gameObject.GetComponentInParent<WalledGenerator>().cochoAguaObj && !full)
+            {
+                StartCoroutine(Full('t'));
+                full = true;
+            }
+
+            if (objCocho == gameObject.GetComponentInParent<WalledGenerator>().cochoComidaObj && !full)
+            {
+                StartCoroutine(Full('h'));
+                full = true;
+            }
+        }
+        
 
         if (objCocho.transform.position.x > transform.position.x)
         {
