@@ -17,7 +17,7 @@ public class ArvoreManager : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        life = Random.Range(2, 4);
+        life = Random.Range(3, 6);
     }
 
     void Update()

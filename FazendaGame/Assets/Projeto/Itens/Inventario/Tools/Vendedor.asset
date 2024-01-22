@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name_: seller
   description_: dasfuikgsadgjaskjgbdsjfsdb
-  icone: {fileID: 21300000, guid: 17bc8f2f55ee0aa4b8c73a0cf70c3a21, type: 3}
+  icone: {fileID: -2496001292675519690, guid: c5772144da0986244b3f7ccea9605e09, type: 3}
   prefab: {fileID: 7134319689545025632, guid: 108af5a4e25b1f742a90734d6fb8a711, type: 3}
   notBunch: 1
   qtd: 0
   islife: 0
   life: 0
-  porcentDamageLife: 1
   damage: 10
   tool: 9
+  toolNivel: 0
   seedGrowth: []
   plantSeed: {fileID: 0}
   water: 0

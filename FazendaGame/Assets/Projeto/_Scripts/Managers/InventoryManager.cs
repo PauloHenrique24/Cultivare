@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
-using static UnityEngine.GraphicsBuffer;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -35,6 +32,13 @@ public class InventoryManager : MonoBehaviour
 
     [HideInInspector] public Tool toolUsed;
 
+    [Header("PageInfo")]
+    [SerializeField] private Image iconeInfo;
+    [SerializeField] private TextMeshProUGUI nameInfo;
+    [SerializeField] private TextMeshProUGUI descricaoInfo;
+
+    private ItemInv itemInfo;
+
     void Awake()
     {
         if (current == null)
@@ -46,6 +50,15 @@ public class InventoryManager : MonoBehaviour
         toolUsed = Tool.none;
 
         GenerateSlots();
+    }
+
+    void FixedUpdate()
+    {
+        if(selectItem != null && itemInfo != selectItem.item)
+        {
+            PaginaInfo(true, selectItem.GetComponent<ItemSlot>().icone.sprite, selectItem.GetComponent<ItemSlot>().name_, selectItem.GetComponent<ItemSlot>().description_,selectItem.item);
+        }
+        else if(selectItem == null) PaginaInfo(false, null, "", "",null);
     }
 
     public void GenerateSlots()
@@ -427,6 +440,29 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void PaginaInfo(bool enabled,Sprite icone,string name_,string desc,ItemInv item)
+    {
+        if (enabled)
+        {
+            iconeInfo.gameObject.SetActive(true);
+
+            iconeInfo.sprite = icone;
+            nameInfo.text = name_;
+            descricaoInfo.text = desc;
+
+            itemInfo = item;
+        }
+        else
+        {
+            iconeInfo.gameObject.SetActive(false);
+            nameInfo.text = "";
+            descricaoInfo.text = "";
+
+            itemInfo = item;
+        }
+    }
+
+
     /*
      *  foreach(var i in slotsList)
             {
@@ -527,4 +563,13 @@ public enum Tool
     edible,
     seller,
     none
+}
+
+public enum Nivel
+{
+    madeira,
+    ferro,
+    magnesita,
+    ametista,
+    aco
 }

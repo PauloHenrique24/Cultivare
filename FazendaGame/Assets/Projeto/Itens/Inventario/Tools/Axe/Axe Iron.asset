@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac79678500cbb143b7efd10abf3cc8e, type: 3}
+  m_Name: Axe Iron
+  m_EditorClassIdentifier: 
+  name_: Axe Iron
+  description_: Espada utilizada para matar monstros
+  icone: {fileID: 9105810481743158861, guid: 7f785ee4a4f0c474fb1034b60c9271ac, type: 3}
+  prefab: {fileID: 6581202945467263139, guid: fbd1c0893bfb6e14aa068069785d0c0a, type: 3}
+  notBunch: 1
+  qtd: 0
+  islife: 1
+  life: 20
+  damage: 10
+  tool: 1
+  toolNivel: 1
+  seedGrowth: []
+  plantSeed: {fileID: 0}
+  water: 0
+  id: 0

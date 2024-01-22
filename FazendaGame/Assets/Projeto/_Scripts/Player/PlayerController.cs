@@ -179,9 +179,7 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetTrigger(animate);
 
-        handObj.transform.GetChild(0).GetComponent<ItemSlot>().life
-        -= handObj.transform.GetChild(0).GetComponent<ItemSlot>()
-        .item.porcentDamageLife;
+        handObj.transform.GetChild(0).GetComponent<ItemSlot>().life--;
        
         StartCoroutine(AtkRestart());
         

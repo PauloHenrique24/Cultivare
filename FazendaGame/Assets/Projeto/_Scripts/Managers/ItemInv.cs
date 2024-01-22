@@ -31,11 +31,11 @@ public class ItemInv : ScriptableObject
     [Space]
     public bool islife;
     public int life;
-    public int porcentDamageLife;
     public float damage;
 
     [Header("Ferramenta")]
     public Tool tool;
+    public Nivel toolNivel;
 
     [Header("Seed")]
     public List<Sprite> seedGrowth;

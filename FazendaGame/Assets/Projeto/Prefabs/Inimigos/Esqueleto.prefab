@@ -50,6 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidade: 1
   distance: 4
+  lifeUI: {fileID: 0}
+  hurtEffect: {fileID: 1591332260981779711, guid: a999c7ed98095af44abf051b12c4d390, type: 3}
 --- !u!212 &334478123835682102
 SpriteRenderer:
   m_ObjectHideFlags: 0

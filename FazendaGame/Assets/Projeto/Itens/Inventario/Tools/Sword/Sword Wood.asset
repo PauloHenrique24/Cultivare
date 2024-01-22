@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac79678500cbb143b7efd10abf3cc8e, type: 3}
+  m_Name: Sword Wood
+  m_EditorClassIdentifier: 
+  name_: Sword Wood
+  description_: Espada utilizada para matar monstros
+  icone: {fileID: 5540858157077839126, guid: a9fc21f554ea704469d2cf8643c42d8f, type: 3}
+  prefab: {fileID: 724191040385222631, guid: cfc71b83a312abd4bbb2d32ad7079541, type: 3}
+  notBunch: 1
+  qtd: 0
+  islife: 1
+  life: 5
+  damage: 10
+  tool: 0
+  toolNivel: 0
+  seedGrowth: []
+  plantSeed: {fileID: 0}
+  water: 0
+  id: 0

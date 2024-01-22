@@ -75,6 +75,9 @@ public class PlantManager : MonoBehaviour
                 InventoryManager.current.selectObj.SetActive(false);
             }
 
+            soilObj.GetComponent<SpriteRenderer>().sprite = soils[0];
+
+
             Destroy(SlotBtn.transform.GetChild(0).gameObject);
             soilObj = null;
         }
