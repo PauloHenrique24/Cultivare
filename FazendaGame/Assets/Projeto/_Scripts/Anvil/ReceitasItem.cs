@@ -16,13 +16,13 @@ public class ReceitasItem : MonoBehaviour
             switch (item.materials[i])
             {
                 case -1:
-                    AnvilManager.current.anvilSlots[j].transform.Find("receita").gameObject.SetActive(false);
+                    AnvilController.current.anvilSlots[j].transform.Find("receita").gameObject.SetActive(false);
                     break;
 
                 default:
-                    AnvilManager.current.anvilSlots[j].transform.Find("receita").gameObject.SetActive(true);
+                    AnvilController.current.anvilSlots[j].transform.Find("receita").gameObject.SetActive(true);
 
-                    AnvilManager.current.anvilSlots[j].transform.Find("receita").GetComponent<Image>().sprite = AnvilManager.current.matsSprites[item.materials[i]];
+                    AnvilController.current.anvilSlots[j].transform.Find("receita").GetComponent<Image>().sprite = AnvilController.current.matsSprites[item.materials[i]];
                     break;
             }
             j++;

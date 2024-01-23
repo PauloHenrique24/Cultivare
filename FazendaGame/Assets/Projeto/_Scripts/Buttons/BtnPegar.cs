@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BtnPegar : MonoBehaviour
@@ -25,7 +26,7 @@ public class BtnPegar : MonoBehaviour
 
     public void Pegar()
     {
-        if (InventoryManager.current.AddItemInv(item))
+        if (InventoryManager.current.AddItemInv(item,itemPref.GetComponent<ItemPref>().life))
         {
             itemPref.GetComponent<ItemPref>().isColected = true;
             isColected = true;

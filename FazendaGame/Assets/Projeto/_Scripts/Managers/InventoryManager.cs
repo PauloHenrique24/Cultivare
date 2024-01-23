@@ -37,12 +37,38 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameInfo;
     [SerializeField] private TextMeshProUGUI descricaoInfo;
 
+    [Header("Pages")]
+    [SerializeField] private GameObject pageinv;
+    [SerializeField] private GameObject pagePlayer;
+
+    [Space]
+
+    [SerializeField] private Button pageInvBtn;
+    [SerializeField] private Button pagePlayerBtn;
+
+    [Space]
+
+    [SerializeField] private Color corBase;
+    [SerializeField] private Color corHigh;
+
+
+    private bool page = false;// false = pageInv, true = pageplayer
+
     private ItemInv itemInfo;
+
+    [Space]
+
+    [SerializeField] private Button handBtn;
+    private Transform slot;
+
 
     void Awake()
     {
         if (current == null)
             current = this;
+
+        pageInvBtn.GetComponent<Image>().color = corHigh;
+        pagePlayerBtn.GetComponent<Image>().color = corBase;
     }
 
     void Start()
@@ -59,6 +85,15 @@ public class InventoryManager : MonoBehaviour
             PaginaInfo(true, selectItem.GetComponent<ItemSlot>().icone.sprite, selectItem.GetComponent<ItemSlot>().name_, selectItem.GetComponent<ItemSlot>().description_,selectItem.item);
         }
         else if(selectItem == null) PaginaInfo(false, null, "", "",null);
+
+        if (selectItem != null)
+        {
+            handBtn.gameObject.SetActive(true);
+        }
+        else
+        {
+            handBtn.gameObject.SetActive(false);
+        }
     }
 
     public void GenerateSlots()
@@ -72,7 +107,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public bool AddItemInv(ItemInv item)
+    public bool AddItemInv(ItemInv item,int life)
     {
         int indice = 0;
         bool creat = false;
@@ -106,7 +141,7 @@ public class InventoryManager : MonoBehaviour
                     {
                         //Espaço livre
                         espace = true;
-                        CreateItem(j.transform, item);
+                        CreateItem(j.transform, item,life);
                         ret = true;
                         break;
                     }
@@ -126,7 +161,7 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            CreateItem(slotsList[indice].transform, item);
+            CreateItem(slotsList[indice].transform, item,life);
             ret = true;
         }
 
@@ -139,7 +174,7 @@ public class InventoryManager : MonoBehaviour
         slot.qtdTxt.text = slot.qtd.ToString("");
     }
 
-    public void CreateItem(Transform parent, ItemInv item)
+    public void CreateItem(Transform parent, ItemInv item,int life)
     {
         var itemI = Instantiate(itemInv, parent);
 
@@ -152,6 +187,9 @@ public class InventoryManager : MonoBehaviour
         itemI.GetComponent<ItemSlot>().icone.gameObject.SetActive(true);
         itemI.GetComponent<ItemSlot>().name_ = item.name_;
         itemI.GetComponent<ItemSlot>().description_ = item.description_;
+        
+        if(item.islife)
+            itemI.GetComponent<ItemSlot>().life = life;
 
         itemI.GetComponent<ItemSlot>().item = item;
 
@@ -193,21 +231,27 @@ public class InventoryManager : MonoBehaviour
         {
             var player = FindFirstObjectByType<PlayerController>();
 
+            Vector2 position = new Vector2();
             if (player.isFacing)
             {
                 //Esquerda
-                Instantiate(selectItem.item.prefab, new Vector2(player.transform.position.x - Random.Range(0.2f, 0.9f), player.transform.position.y), Quaternion.identity);
-                RemoveItemInventory(selectItem, 1);
+                position = new Vector2(player.transform.position.x - Random.Range(0.2f, 0.9f), player.transform.position.y);
             }
             else
             {
                 //Direita
-                Instantiate(selectItem.item.prefab, new Vector2(player.transform.position.x + Random.Range(0.2f, 0.9f), player.transform.position.y), Quaternion.identity);
-                RemoveItemInventory(selectItem, 1);
+                position = new Vector2(player.transform.position.x + Random.Range(0.2f, 0.9f), player.transform.position.y);
             }
+
+            var prefSolt = Instantiate(selectItem.item.prefab, position, Quaternion.identity);
+
+            prefSolt.GetComponent<ItemPref>().life = selectItem.life;
+
+            RemoveItemInventory(selectItem, 1);
         }
     }
 
+    
     void RemoveItemInventory(ItemSlot item, int qtd)
     {
         item.qtd -= qtd;
@@ -229,7 +273,7 @@ public class InventoryManager : MonoBehaviour
             }
 
             //Bigorna Aberta
-            foreach(var AS in AnvilManager.current.anvilSlots)
+            foreach(var AS in AnvilController.current.anvilSlots)
             {
                 if (AS.transform.childCount > 0 && AS.transform.GetChild(0).GetComponent<ItemSlot>() == item)
                 {
@@ -330,14 +374,42 @@ public class InventoryManager : MonoBehaviour
     {
         if (selectItem != null && selectItem.item.tool != Tool.mats && selectItem.item.tool != Tool.seeds && selectItem.item.tool != Tool.none)
         {
-            if(handObj.transform.childCount <= 0)
+            if (handObj.transform.childCount <= 0)
             {
                 selectItem.transform.position = handObj.transform.position;
                 selectItem.transform.SetParent(handObj.transform);
 
                 selectObj.transform.localScale = new Vector3(1, 1, 1);
-                    
+
                 selectItem.transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                if (selectItem.transform.parent != handObj.transform)
+                {
+                    foreach (var i in slotsList)
+                    {
+                        if (i.transform.childCount > 0)
+                        {
+                            if (i.transform.GetChild(0).GetComponent<ItemSlot>().isSelect)
+                            {
+                                slot = i.transform;
+                                break;
+                            }
+                        }
+                    }
+
+                    selectItem.transform.position = handObj.transform.position;
+                    selectItem.transform.SetParent(handObj.transform);
+
+                    handObj.transform.GetChild(0).transform.position = slot.position;
+                    handObj.transform.GetChild(0).transform.SetParent(slot.transform);
+
+                    selectObj.transform.localScale = new Vector3(1, 1, 1);
+
+                    selectItem.transform.localScale = new Vector3(1, 1, 1);
+                    slot = null;
+                }
             }
 
             if (handObj.transform.childCount > 0)
@@ -459,6 +531,32 @@ public class InventoryManager : MonoBehaviour
             descricaoInfo.text = "";
 
             itemInfo = item;
+        }
+    }
+
+    public void PagesInv()
+    {
+        if (page)
+        {
+            pageinv.gameObject.SetActive(true);
+            pagePlayer.gameObject.SetActive(false);
+
+            pageInvBtn.GetComponent<Image>().color = corHigh;
+            pagePlayerBtn.GetComponent<Image>().color = corBase;
+            page = false;
+        }
+    }
+
+    public void PagesPlayer()
+    {
+        if (!page)
+        {
+            pageinv.gameObject.SetActive(false);
+            pagePlayer.gameObject.SetActive(true);
+
+            pageInvBtn.GetComponent<Image>().color = corBase;
+            pagePlayerBtn.GetComponent<Image>().color = corHigh;
+            page = true;
         }
     }
 

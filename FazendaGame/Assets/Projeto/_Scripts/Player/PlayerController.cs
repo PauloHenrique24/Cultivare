@@ -161,6 +161,7 @@ public class PlayerController : MonoBehaviour
                 {
                     case Tool.sword:
                         AtkFunc("sword");
+                        SoundsManager.current.PlaySound(false, SoundsManager.current.clips[0],.3f);
                         break;
 
 
@@ -188,7 +189,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator AtkRestart()
     {
         isAtk = true;
-        yield return new WaitForSeconds(.7f);
+        yield return new WaitForSeconds(.5f);
         isAtk = false;
     }
 

@@ -12,6 +12,8 @@ public class ItemPref : MonoBehaviour
     private bool isDisable = false;
 
     [HideInInspector] public bool isColected;
+    [HideInInspector] public int life;
+    
 
     void Start()
     {

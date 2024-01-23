@@ -7,61 +7,12 @@ using UnityEngine.UI;
 
 public class AnvilManager : MonoBehaviour
 {
-    public static AnvilManager current;
-
-    [Header("Slots")]
-    public GameObject itemSlot;
-    public Transform parentSlot;
-    public int qtdSlots;
-
-    [HideInInspector] public List<GameObject> anvilSlots;
-
     [Header("Receitas")]
-    public GameObject itemReceita;
-    public Transform parentReceita;
     public List<AnvilItem> receitas;
-
-    public List<Sprite> matsSprites;
-
-    [Header("Saida")]
-    public GameObject itemSaida;
-    public Transform parentSaida;
 
     [Header("Interface")]
     public GameObject canvasUI;
     public GameObject buttonOpenAnvil;
-
-    void Awake()
-    {
-        if(current == null)
-            current = this;
-    }
-
-    void Start()
-    {
-        //Slots Fabricar
-        for(int i = 0;i < qtdSlots; i++)
-        {
-            //Criar item Slot
-            var item = Instantiate(itemSlot, parentSlot);
-            item.GetComponent<Button>().onClick.AddListener(() => InventoryManager.current.OtherPositionItemAnvil(item));
-
-            anvilSlots.Add(item);
-
-            //Aumentar o tamanho do slot
-            item.transform.localScale = new Vector3(1.4f, 1.4f);
-        }
-
-        //Receitas
-        for(int i = 0;i < receitas.Count; i++)
-        {
-            var itemRec = Instantiate(itemReceita,parentReceita);
-            itemRec.transform.Find("icone").GetComponent<Image>().sprite = receitas[i].item.icone;
-            itemRec.transform.Find("name_").GetComponent<TextMeshProUGUI>().text = receitas[i].item.name_;
-
-            itemRec.GetComponent<ReceitasItem>().item = receitas[i];
-        }
-    }
 
     bool dist = false;
 
@@ -73,6 +24,7 @@ public class AnvilManager : MonoBehaviour
             {
                 canvasUI.SetActive(true);
                 buttonOpenAnvil.SetActive(true);
+                buttonOpenAnvil.GetComponent<Button>().onClick.AddListener(Open);
                 dist = false;
             }
         }
@@ -82,6 +34,7 @@ public class AnvilManager : MonoBehaviour
             {
                 canvasUI.SetActive(false);
                 buttonOpenAnvil.SetActive(false);
+                buttonOpenAnvil.GetComponent<Button>().onClick.RemoveListener(Open);
                 dist = true;
             }
         }
@@ -90,6 +43,8 @@ public class AnvilManager : MonoBehaviour
     public void Open()
     {
         PlayerController.isMov = true;
+        AnvilController.current.GenerateReceitas(receitas.ToArray());
+        AnvilController.current.criarBtn.onClick.AddListener(CriarBtn);
     }
 
     public void CriarBtn()
@@ -100,13 +55,13 @@ public class AnvilManager : MonoBehaviour
         {
             foreach (var j in receitas)
             {
-                for (int i = 0;i < anvilSlots.Count; i++)
+                for (int i = 0;i < AnvilController.current.anvilSlots.Count; i++)
                 {
                     if (j.materials[i] != -1)
                     {
-                        if (anvilSlots[i].transform.childCount > 1)
+                        if (AnvilController.current.anvilSlots[i].transform.childCount > 1)
                         {
-                            if (anvilSlots[i].transform.GetChild(1).GetComponent<ItemSlot>().item.id == j.materials[i])
+                            if (AnvilController.current.anvilSlots[i].transform.GetChild(1).GetComponent<ItemSlot>().item.id == j.materials[i])
                             {
                                 receita = true;
                             }
@@ -122,7 +77,7 @@ public class AnvilManager : MonoBehaviour
                             break;
                         }
                     }
-                    else if (j.materials[i] == -1 && anvilSlots[i].transform.childCount > 1)
+                    else if (j.materials[i] == -1 && AnvilController.current.anvilSlots[i].transform.childCount > 1)
                     {
                         receita = false;
                         break;
@@ -142,7 +97,7 @@ public class AnvilManager : MonoBehaviour
             //Excluir itens dos slots
             //Criar item no slot saida
 
-            foreach(var i in anvilSlots)
+            foreach(var i in AnvilController.current.anvilSlots)
             {
                 if (i.transform.childCount > 1)
                 {
@@ -157,7 +112,7 @@ public class AnvilManager : MonoBehaviour
             }
 
 
-            var it = Instantiate(itemSaida,parentSaida);
+            var it = Instantiate(AnvilController.current.itemSaida, AnvilController.current.parentSaida);
             it.transform.localPosition = new Vector3(0, 0, 0);
 
             it.GetComponent<ItemSlot>().qtd = 1;
@@ -170,16 +125,6 @@ public class AnvilManager : MonoBehaviour
 
             it.GetComponent<ItemSlot>().item = itemSelected.item;
         }
-    }
-
-    public void Close()
-    {
-        foreach(var i in anvilSlots)
-        {
-            i.transform.Find("receita").gameObject.SetActive(false);
-        }
-
-        PlayerController.isMov = false;
     }
 
     /* Botão Criar

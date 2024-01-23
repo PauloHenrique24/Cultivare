@@ -28,7 +28,9 @@ public class ItemSlot : MonoBehaviour
         if (item.islife)
         {
             lifeUI.gameObject.SetActive(true);
-            life = item.life;
+            if(life <= 0)
+                life = item.life;
+
             lifeUI.maxValue = item.life;
         }
         else
