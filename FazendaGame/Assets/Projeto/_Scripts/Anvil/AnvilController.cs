@@ -29,6 +29,12 @@ public class AnvilController : MonoBehaviour
     public GameObject itemSaida;
     public Transform parentSaida;
 
+    [Header("Style")]
+    public TextMeshProUGUI title;
+
+    [Header("Interface")]
+    public GameObject buttonOpenAnvil;
+
 
     private void Awake()
     {

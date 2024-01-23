@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6575d7704fc8e2a428c5948cb8ccf648, type: 3}
+  m_Name: Inventario
+  m_EditorClassIdentifier: 
+  indice: 0
+  itensBau:
+  - {fileID: 11400000, guid: 113920fd81f10574c9da11bf7f346d78, type: 2}
+  - {fileID: 11400000, guid: b8b7b1bef243b304680ff6b92fe1e8f9, type: 2}
+  - {fileID: 11400000, guid: e10598e315e307f4aa6f6495b2d3442d, type: 2}
+  - {fileID: 11400000, guid: 033797494df9d864395463488c9993be, type: 2}
+  - {fileID: 11400000, guid: 5e3fb0809b2d39d4db7e35de32a79699, type: 2}
+  - {fileID: 11400000, guid: ab3b3d7f7a667d9479b2d9de64bfc629, type: 2}
+  - {fileID: 11400000, guid: 113920fd81f10574c9da11bf7f346d78, type: 2}
+  - {fileID: 11400000, guid: 0c235c8fe6f96c747850346a9935f0b0, type: 2}
+  - {fileID: 11400000, guid: 469129ca14407f24b8d55accd1832d69, type: 2}
+  lifesBau: 32000000000000000e000000040000000000000005000000320000000800000000000000
+  indiceSlot: 000000000100000002000000030000000400000005000000060000000700000008000000
+  qtdItens: 010000000200000001000000010000000100000001000000010000000100000001000000

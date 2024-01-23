@@ -22,6 +22,7 @@ public class ItemSlot : MonoBehaviour
     [HideInInspector] public int life;
 
     public bool isAnvil;
+    [HideInInspector] public bool isChest;
 
     void Start()
     {

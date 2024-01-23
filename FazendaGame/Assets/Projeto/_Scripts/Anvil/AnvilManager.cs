@@ -12,7 +12,9 @@ public class AnvilManager : MonoBehaviour
 
     [Header("Interface")]
     public GameObject canvasUI;
-    public GameObject buttonOpenAnvil;
+
+    public Sprite iconBtn;
+    public string Title;
 
     bool dist = false;
 
@@ -22,9 +24,10 @@ public class AnvilManager : MonoBehaviour
         {
             if (dist)
             {
+                AnvilController.current.buttonOpenAnvil.transform.GetChild(0).GetComponent<Image>().sprite = iconBtn;
                 canvasUI.SetActive(true);
-                buttonOpenAnvil.SetActive(true);
-                buttonOpenAnvil.GetComponent<Button>().onClick.AddListener(Open);
+                AnvilController.current.buttonOpenAnvil.SetActive(true);
+                AnvilController.current.buttonOpenAnvil.GetComponent<Button>().onClick.AddListener(Open);
                 dist = false;
             }
         }
@@ -33,8 +36,8 @@ public class AnvilManager : MonoBehaviour
             if (!dist)
             {
                 canvasUI.SetActive(false);
-                buttonOpenAnvil.SetActive(false);
-                buttonOpenAnvil.GetComponent<Button>().onClick.RemoveListener(Open);
+                AnvilController.current.buttonOpenAnvil.SetActive(false);
+                AnvilController.current.buttonOpenAnvil.GetComponent<Button>().onClick.RemoveListener(Open);
                 dist = true;
             }
         }
@@ -45,6 +48,7 @@ public class AnvilManager : MonoBehaviour
         PlayerController.isMov = true;
         AnvilController.current.GenerateReceitas(receitas.ToArray());
         AnvilController.current.criarBtn.onClick.AddListener(CriarBtn);
+        AnvilController.current.title.text = Title;
     }
 
     public void CriarBtn()

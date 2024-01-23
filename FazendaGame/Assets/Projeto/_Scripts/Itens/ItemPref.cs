@@ -13,11 +13,17 @@ public class ItemPref : MonoBehaviour
 
     [HideInInspector] public bool isColected;
     [HideInInspector] public int life;
-    
 
+    bool dest;
+    
     void Start()
     {
-        player = FindFirstObjectByType<PlayerController>().gameObject;    
+        player = FindFirstObjectByType<PlayerController>().gameObject;
+        dest = PlayerPrefs.GetInt(gameObject.GetInstanceID().ToString(), 0) == 1;
+        if (dest)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Update()
@@ -53,6 +59,8 @@ public class ItemPref : MonoBehaviour
                 FindFirstObjectByType<BtnPegar>().btnEnabled.gameObject.SetActive(false);
                 FindFirstObjectByType<BtnPegar>().item = null;
                 FindFirstObjectByType<BtnPegar>().itemPref = null;
+                dest = true;
+                PlayerPrefs.SetInt(gameObject.GetInstanceID().ToString(), dest ? 1 : 0);
                 Destroy(gameObject);
             }
         }

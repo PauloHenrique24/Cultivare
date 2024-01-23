@@ -19,7 +19,7 @@ MonoBehaviour:
   notBunch: 1
   qtd: 0
   islife: 1
-  life: 10
+  life: 50
   damage: 10
   tool: 0
   toolNivel: 0

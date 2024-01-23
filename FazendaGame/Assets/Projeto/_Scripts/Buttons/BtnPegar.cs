@@ -26,7 +26,17 @@ public class BtnPegar : MonoBehaviour
 
     public void Pegar()
     {
-        if (InventoryManager.current.AddItemInv(item,itemPref.GetComponent<ItemPref>().life))
+        int life = 0;
+        if (itemPref.GetComponent<ItemPref>().life <= 0)
+        {
+            life = itemPref.GetComponent<ItemPref>().item.life;
+        }
+        else
+        {
+            life = itemPref.GetComponent<ItemPref>().life;
+        }
+
+        if (InventoryManager.current.AddItemInv(item, life))
         {
             itemPref.GetComponent<ItemPref>().isColected = true;
             isColected = true;

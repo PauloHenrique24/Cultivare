@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,6 +63,10 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Button handBtn;
     private Transform slot;
 
+    [Header("Save")]
+    [SerializeField] private SlotsBau inventarioSave;
+    private List<ItemSlot> itens = new List<ItemSlot>();
+
 
     void Awake()
     {
@@ -76,6 +82,7 @@ public class InventoryManager : MonoBehaviour
         toolUsed = Tool.none;
 
         GenerateSlots();
+        Load();
     }
 
     void FixedUpdate()
@@ -141,7 +148,7 @@ public class InventoryManager : MonoBehaviour
                     {
                         //Espaço livre
                         espace = true;
-                        CreateItem(j.transform, item,life);
+                        CreateItem(j.transform, item,life,1);
                         ret = true;
                         break;
                     }
@@ -161,9 +168,11 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            CreateItem(slotsList[indice].transform, item,life);
+            CreateItem(slotsList[indice].transform, item,life,1);
             ret = true;
         }
+
+        Save();
 
         return ret;
     }
@@ -174,13 +183,13 @@ public class InventoryManager : MonoBehaviour
         slot.qtdTxt.text = slot.qtd.ToString("");
     }
 
-    public void CreateItem(Transform parent, ItemInv item,int life)
+    public void CreateItem(Transform parent, ItemInv item,int life,int qtd)
     {
         var itemI = Instantiate(itemInv, parent);
 
         itemI.transform.localPosition = new Vector3(0, 0, 0);
 
-        itemI.GetComponent<ItemSlot>().qtd = 1;
+        itemI.GetComponent<ItemSlot>().qtd = qtd;
 
         itemI.GetComponent<ItemSlot>().qtdTxt.text = itemI.GetComponent<ItemSlot>().qtd.ToString("");
         itemI.GetComponent<ItemSlot>().icone.sprite = item.icone;
@@ -249,8 +258,10 @@ public class InventoryManager : MonoBehaviour
 
             RemoveItemInventory(selectItem, 1);
         }
-    }
 
+        StartCoroutine(SaveTimer());
+
+    }
     
     void RemoveItemInventory(ItemSlot item, int qtd)
     {
@@ -354,8 +365,101 @@ public class InventoryManager : MonoBehaviour
 
                     selectItem.transform.localScale = new Vector3(1, 1, 1);
                     selectItem.isAnvil = false;
+
+                    if(selectItem.isChest)
+                    {
+                        BauController.current.bau.GetComponent<BauManager>().itensSlot.Remove(selectItem);
+                        BauController.current.bau.GetComponent<BauManager>().Save();
+                        selectItem.isChest = false;
+                        
+                    }
+                  
                 }
             }
+
+            Save();
+
+            if (handObj.transform.childCount > 0)
+            {
+                toolUsed = selectItem.item.tool;
+                buttonAtk.SetActive(true);
+            }
+            else
+            {
+                toolUsed = Tool.none;
+                buttonAtk.SetActive(false);
+            }
+        }
+    }
+    
+    public void OtherPositionItemChest(GameObject obj)
+    {
+        //Metodo de colocar itens no inventario
+        if (selectItem != null)
+        {
+            bool isAdd = false;
+
+            //Verificar se tem um item chegando e se ele ira agrupar ou criar
+            if (!selectItem.isAnvil)
+            {
+                foreach (var i in slotsList)
+                {
+                    if (i.transform.childCount > 0 && i.transform.GetChild(0).GetComponent<ItemSlot>().item == selectItem.item &&
+                        i.transform.GetChild(0).GetComponent<ItemSlot>().qtd < i.transform.GetChild(0).GetComponent<ItemSlot>().item.qtd &&
+                        !i.transform.GetChild(0).GetComponent<ItemSlot>().item.notBunch)
+                    {
+                        //Pode adicionar
+                        selectItem.qtd--;
+                        selectItem.qtdTxt.text = selectItem.qtd.ToString("");
+
+                        if (selectItem.qtd <= 0)
+                        {
+                            if (selectItem.transform.Find(selectObj.name))
+                            {
+                                selectObj.transform.localScale = new Vector3(1, 1, 1);
+                                selectObj.transform.SetParent(transform);
+
+                                selectObj.SetActive(false);
+                            }
+
+                            Destroy(selectItem.gameObject);
+                        }
+
+                        AcrescentarItem(i.transform.GetChild(0).GetComponent<ItemSlot>());
+
+                        isAdd = true;
+                        break;
+                    }
+                    else
+                    {
+                        isAdd = false;
+                    }
+                }
+            }
+            else
+            {
+                isAdd = false;
+            }
+
+
+            if (!isAdd)
+            {
+                if (obj.transform.childCount <= 0)
+                {
+                    selectItem.transform.position = obj.transform.position;
+                    selectItem.transform.SetParent(obj.transform);
+
+                    selectObj.transform.localScale = new Vector3(1, 1, 1);
+
+                    selectItem.transform.localScale = new Vector3(1, 1, 1);
+                    selectItem.isChest = true;
+                    BauController.current.bau.GetComponent<BauManager>().itensSlot.Add(selectItem);
+                    BauController.current.bau.GetComponent<BauManager>().Save();
+                    
+                }
+            }
+
+            Save();
 
             if (handObj.transform.childCount > 0)
             {
@@ -379,6 +483,13 @@ public class InventoryManager : MonoBehaviour
                 selectItem.transform.position = handObj.transform.position;
                 selectItem.transform.SetParent(handObj.transform);
 
+                if (selectItem.isChest)
+                {
+                    BauController.current.bau.GetComponent<BauManager>().itensSlot.Remove(selectItem);
+                    BauController.current.bau.GetComponent<BauManager>().Save();
+                    selectItem.isChest = false;
+                }
+
                 selectObj.transform.localScale = new Vector3(1, 1, 1);
 
                 selectItem.transform.localScale = new Vector3(1, 1, 1);
@@ -399,6 +510,13 @@ public class InventoryManager : MonoBehaviour
                         }
                     }
 
+                    if (selectItem.isChest)
+                    {
+                        BauController.current.bau.GetComponent<BauManager>().itensSlot.Remove(selectItem);
+                        BauController.current.bau.GetComponent<BauManager>().Save();
+                        selectItem.isChest = false;
+                    }
+
                     selectItem.transform.position = handObj.transform.position;
                     selectItem.transform.SetParent(handObj.transform);
 
@@ -409,8 +527,12 @@ public class InventoryManager : MonoBehaviour
 
                     selectItem.transform.localScale = new Vector3(1, 1, 1);
                     slot = null;
+
+                   
                 }
             }
+
+            Save();
 
             if (handObj.transform.childCount > 0)
             {
@@ -461,6 +583,8 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
+
+        Save();
     }
 
     public void PlantPositionItemPlanted(GameObject obj)
@@ -560,92 +684,59 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    IEnumerator SaveTimer()
+    {
+        yield return new WaitForSeconds(.2f);
+        Save();
+    }
+    
+    public void Save()
+    {
+        itens.Clear();
 
-    /*
-     *  foreach(var i in slotsList)
+        for (int i = 0;i < slotsList.Count; i++)
+        {
+            if (slotsList[i].transform.childCount > 0)
             {
-                if (i.transform.childCount > 0)
-                {
-                    if (i.transform.GetChild(0).GetComponent<ItemSlot>().item == selectItem.item && i.transform.GetChild(0).GetComponent<ItemSlot>() != selectItem)
-                    {
-                       
-                        if (i.transform.GetChild(0).GetComponent<ItemSlot>().qtd < selectItem.item.qtd)
-                        {
-                            selectItem.isAnvil = false;
+                itens.Add(slotsList[i].transform.GetChild(0).GetComponent<ItemSlot>());
+            }
+        }
 
-                            AcrescentarItem(i.transform.GetChild(0).GetComponent<ItemSlot>());
-                        }
-                        else
-                        {
-                            foreach (var j in slotsList)
-                            {
-                                if (j.transform.childCount <= 0)
-                                {
-                                    selectItem.isAnvil = false;
-                                    CreateItem(j.transform, selectItem.item);
-                                    break;
-                                }
-                            }
-                        }
+        inventarioSave.lifesBau.Clear();
+        inventarioSave.itensBau.Clear();
+        inventarioSave.indiceSlot.Clear();
+        inventarioSave.qtdItens.Clear();
 
-                        selectItem.qtd--;
-                        selectItem.qtdTxt.text = selectItem.qtd.ToString("");
+        for (int i = 0; i < itens.Count; i++)
+        {
+            inventarioSave.lifesBau.Add(itens[i].life);
+            inventarioSave.itensBau.Add(itens[i].item);
+            inventarioSave.qtdItens.Add(itens[i].qtd);
 
-                        RemoveItemInventory(selectItem, 1);
-
-                        isAdd = true;
-                        break;
-                        
-                    }
-                    else
-                    {
-                        isAdd = false;
-                    }
-                }
-            } foreach(var i in slotsList)
+            for (int j = 0; j < slotsList.Count; j++)
             {
-                if (i.transform.childCount > 0)
+                if (slotsList[j].transform.childCount > 0 && slotsList[j].transform.GetChild(0).GetComponent<ItemSlot>() == itens[i])
                 {
-                    if (i.transform.GetChild(0).GetComponent<ItemSlot>().item == selectItem.item && i.transform.GetChild(0).GetComponent<ItemSlot>() != selectItem)
-                    {
-                       
-                        if (i.transform.GetChild(0).GetComponent<ItemSlot>().qtd < selectItem.item.qtd)
-                        {
-                            selectItem.isAnvil = false;
-
-                            AcrescentarItem(i.transform.GetChild(0).GetComponent<ItemSlot>());
-                        }
-                        else
-                        {
-                            foreach (var j in slotsList)
-                            {
-                                if (j.transform.childCount <= 0)
-                                {
-                                    selectItem.isAnvil = false;
-                                    CreateItem(j.transform, selectItem.item);
-                                    break;
-                                }
-                            }
-                        }
-
-                        selectItem.qtd--;
-                        selectItem.qtdTxt.text = selectItem.qtd.ToString("");
-
-                        RemoveItemInventory(selectItem, 1);
-
-                        isAdd = true;
-                        break;
-                        
-                    }
-                    else
-                    {
-                        isAdd = false;
-                    }
+                    inventarioSave.indiceSlot.Add(j);
+                    break;
                 }
             }
-     
-     */
+        }
 
+        
+    }
+
+
+    public void Load()
+    {
+        if(inventarioSave != null)
+        {
+            for(int i = 0;i < inventarioSave.itensBau.Count; i++)
+            {
+                CreateItem(slotsList[inventarioSave.indiceSlot[i]].transform, inventarioSave.itensBau[i], inventarioSave.lifesBau[i], inventarioSave.qtdItens[i]);
+            }
+        }
+    }
 }
 
 public enum Tool
